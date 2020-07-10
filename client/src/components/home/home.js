@@ -1,21 +1,18 @@
 import React, {useEffect, useState} from 'react';
 import {useParams, useLocation, useHistory} from "react-router-dom"; 
 import queryString from 'query-string'; 
-import io from "socket.io-client"; 
+import socket from "../socket"; 
 import {connect} from "react-redux"; 
 import SpotifyWebApi from 'spotify-web-api-node';
 import credentials from "../credentials";
-import {setName, setRoom, setCode, makeAdmin}  from "../login/loginSlice";
-import {Row, Container, Button } from "react-bootstrap"; 
+import {setName, setRoom, setCode, makeAdmin, setUsers}  from "../login/loginSlice";
+import {Row, Col, Container, Button } from "react-bootstrap"; 
 import "./home.css";
 
 
 
 
-let socket; 
-
-function Home ({name, room, admin, makeAdmin, setName, setRoom, setCode}) {
-    const [people, setPeople] = useState([]);
+function Home ({name, room, users, admin, makeAdmin, setName, setRoom, setUsers, setCode}) {
     const {code, state} = queryString.parse(useLocation().search); 
     var SpotifyAPI = new SpotifyWebApi(credentials); 
     // SpotifyAPI.authorizationCodeGrant(code).then(
@@ -35,58 +32,51 @@ function Home ({name, room, admin, makeAdmin, setName, setRoom, setCode}) {
         setName(name_temp); 
         makeAdmin(admin_temp);
         console.log("Effect is running again")
-        socket = io("localhost:5000"); 
-        socket.emit( 'authenticate', {name_temp, room_temp, admin_temp, code}, (errors, access_token, refresh_token) => {
+        socket.emit( 'authenticate', {name_temp, room_temp, admin_temp, code}, (errors) => {
             if (errors) { 
                 history.push("/"); 
                 alert(errors); 
-            } else {
-                SpotifyAPI.setAccessToken(access_token);
-                SpotifyAPI.getMe().then(
-                    function(data) {
-                        const id = data.body["id"];
-                        socket.emit( 'join', {name_temp, room_temp, id})
-                    });
+            } else { 
+                socket.emit('join')
             }
         })
-
     }, [])
 
-    async function getPerson(users) { 
-        var people_array = [] 
-        var user;
-        for (user of users) {
-            await SpotifyAPI.getUser(user.id).then(
-                function(data) { 
-                    var person = {} 
-                    person.name = user.name; 
-                    person.admin = user.admin;
-                    if (data.body["images"][0]) { 
-                        person.image = data.body["images"][0]["url"]; 
-                    }
-                    setPeople([...people_array, person])
-                    people_array.push(person);
-                }
-            )
-        }
+    // async function getPerson(users) {
+    //     console.log(users); 
+    //     var people_array = [] 
+    //     var user;
+    //     for (user of users) {
+    //         SpotifyAPI.setAccessToken(user.access_token)
+    //         await SpotifyAPI.getUser(user.id).then(
+    //             function(data) { 
+    //                 var person = {} 
+    //                 person.name = user.name; 
+    //                 person.admin = user.admin;
+    //                 if (data.body["images"][0]) { 
+    //                     person.image = data.body["images"][0]["url"]; 
+    //                 }
+    //                 setPeople([...people_array, person])
+    //                 people_array.push(person);
+    //             }, function(err) { 
+    //                 alert(err.toString());
+    //             }
+    //         )
+    //     }
 
-    }
-
+    // }
 
     useEffect (() => { 
-
         socket.on('roomData', ({users}) => {
-            getPerson(users);
+            setUsers(users); 
         } ) 
         socket.on('start', () => { 
             history.push("/main"); 
-        })
+        }) 
     }, [])
 
+    const roomUsers = users.map( (person, index) => {
 
-    const users = people.map( (person, index) => {
-        console.log(index); 
-        console.log(person);
         const adminType = person.admin ? "person admin": "person"
         const nameType = (person.name == name) ? "profile": "normal"
         return (
@@ -106,12 +96,16 @@ function Home ({name, room, admin, makeAdmin, setName, setRoom, setCode}) {
     return (
         <div className = "home">
             <Container>
-                <Row className = "code">  
+                <Row className = "code"> 
+                    <Col md = {12}>  
                     <label htmlFor="roomCode" > CODE: </label> <i id = "roomCode"> {room}</i>
                     {startbutton} 
+                    </Col>
                 </Row> 
                 <Row>
-                    {users}
+                    <Col md = {12}>
+                        {roomUsers}
+                    </Col> 
                 </Row>
             </Container>
         </div>
@@ -124,11 +118,12 @@ const mapStateToProps = state => {
         name: state.login.name, 
         room: state.login.room, 
         code: state.login.code, 
-        admin: state.login.admin
+        admin: state.login.admin, 
+        users: state.login.users
     })
 }
 
-const mapDispatchToProps = {setName, setRoom, setCode, makeAdmin}; 
+const mapDispatchToProps = {setName, setRoom, setCode, makeAdmin, setUsers}; 
 
 
 

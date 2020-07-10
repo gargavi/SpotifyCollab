@@ -7,6 +7,8 @@ export const loginSlice = createSlice({
     room: "",
     code: "", 
     admin: false, 
+    users: [], 
+    access_token: ""
   },
   reducers: {
     setName: (state, action) => {
@@ -21,10 +23,16 @@ export const loginSlice = createSlice({
     makeAdmin: (state, action) => { 
       state.admin = action.payload
     }, 
+    setUsers: (state, action) => { 
+      state.users = action.payload
+    }, 
+    setAccess: (state, action) => { 
+      state.access_token = action.payload; 
+    }
   },
 });
 
-export const {setName, setRoom, setCode, makeAdmin } = loginSlice.actions;
+export const {setName, setRoom, setCode, makeAdmin, setUsers, setAccess} = loginSlice.actions;
 
 
 export default loginSlice.reducer;

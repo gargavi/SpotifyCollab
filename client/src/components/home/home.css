@@ -30,13 +30,14 @@
     vertical-align: middle;
 }
 
-.person { 
-    text-align: center;
+.home .person { 
+    text-align: left;
     width: 45%;
+    padding-left: 10%;
     display: inline-block;
     height: 180px;
 }
-.person img { 
+.home .person img { 
     height: 150px;
     width: 150px; 
     border-style: solid;
@@ -47,14 +48,14 @@
     display: inline;
     vertical-align: middle;
 }
-.person i { 
+.home .person i { 
     display: inline; 
     vertical-align: middle;
     margin-left: 10%;
     font-size: 30px;
 }
 
-.person.admin img {
+.home .person.admin img {
     border-color: #1ed760;
 }
 
@@ -80,6 +81,7 @@
     border-style: solid;
     border-color: white;
     border-width: 4px;
+    background-color: #1ED760;
 }
 
 .home .profile { 

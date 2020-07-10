@@ -2,13 +2,13 @@
     background-color: hsl(0, 0%, 17%);
     text-align: center;
     min-height: 100vh; 
-    padding: 4%;
+    padding: 3%;
 }
 
 .loginContainer img { 
     width: 40%;
-    margin-top: 8%;
-    margin-bottom: 5%;
+    margin-top: 7%;
+    margin-bottom: 4%;
 }
 
 .loginContainer input { 
@@ -30,17 +30,6 @@
 }
 
 
-.loginContainer .btn:focus { 
-    outline-offset: 0 !important;
-    outline: none;
-}
-
-.loginContainer .btn:hover {
-    border-style:solid;
-    border-color: white;
-}
-
-
 .loginContainer .namelabel { 
     color: white;
     font-weight: bold;
@@ -53,23 +42,11 @@
 }
 
 .loginContainer .row { 
-    margin-bottom: 3.5%;
+    margin-bottom: 3%;
 }
 
 
-.loginContainer .btn { 
+
+#join {
     margin-right: 6%;
-    font-family: 'Quicksand', sans-serif;
-    background-color: #1ED760; 
-    color: white;
-    cursor: pointer;
-    height: 50px;
-    display: inline-block;
-    width: 200px;
-    vertical-align: middle;  
-    font-size: 20px;
-    font-weight: bold;
-    border-style: none;
-    border-radius: 40px;
 }
-

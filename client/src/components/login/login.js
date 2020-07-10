@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'; 
 import {connect} from "react-redux";
 import {Link, useHistory} from "react-router-dom"; 
+
 import {Button, Col, Row, Container} from "react-bootstrap";
 import SpotifyWebApi from 'spotify-web-api-node'; 
 import SpotifyLogo from "../photos/Spotify_Logo_RGB_Green.png"
@@ -20,6 +21,7 @@ function Login({name, room, setName, setRoom}) {
         const adminbit =  admin ? 1 : 0   
         const state = adminbit +  room + name
         var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state, true); 
+
         window.open(authorizeURL, "_self")
     }
     
@@ -44,27 +46,32 @@ function Login({name, room, setName, setRoom}) {
 
     return (
         <div className = "loginContainer"> 
-        <Container>
-            
+        <Container fluid = "md">
            <img src = {SpotifyLogo} />
            <Row> 
-                <label className = "namelabel"> NAME: </label>
-                <input  
-                    type= "text"
-                    placeholder = "Name"
-                    onChange = {(event) => setName(event.target.value)}
-                /> 
+                <Col md = {12}> 
+                    <label className = "namelabel"> NAME: </label>
+                    <input  
+                        type= "text"
+                        placeholder = "Name"
+                        onChange = {(event) => setName(event.target.value)}
+                    /> 
+                </Col>
             </Row>
             <Row>
-                <Button type = "submit" onClick = {joinTeam}> JOIN ROOM </Button> 
-                <input  
-                    type= "text"
-                    placeholder = "Room"
-                    onChange = {(event) => setRoom(event.target.value)}
-                />
+                <Col md = {12}> 
+                    <Button id ="join" type = "submit" onClick = {joinTeam}> JOIN ROOM </Button> 
+                    <input  
+                        type= "text"
+                        placeholder = "Room"
+                        onChange = {(event) => setRoom(event.target.value)}
+                    />
+                </Col>
             </Row>
             <Row>
-                <Button type = "submit" onClick = {createTeam} > CREATE ROOM </Button> 
+                <Col md = {12}> 
+                  <Button  type = "submit" onClick = {createTeam} > CREATE ROOM </Button> 
+                </Col>  
             </Row>
            
         </Container>
