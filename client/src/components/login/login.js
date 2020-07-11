@@ -16,8 +16,8 @@ function Login({name, room, setName, setRoom}) {
     function Authorize(name, room, admin) { 
         
         var spotifyApi = new SpotifyWebApi(credentials);
-        var scopes = ['user-read-private', 
-        'playlist-read-private', 'user-library-read', 'user-modify-playback-state' ]
+        var scopes = ['user-read-private', 'user-read-currently-playing', 
+        'playlist-read-private', 'user-library-read', 'user-top-read', 'user-modify-playback-state' ]
         const adminbit =  admin ? 1 : 0   
         const state = adminbit +  room + name
         var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state, true); 
@@ -49,29 +49,21 @@ function Login({name, room, setName, setRoom}) {
         <Container fluid = "md">
            <img src = {SpotifyLogo} />
            <Row> 
-                <Col md = {12}> 
-                    <label className = "namelabel"> NAME: </label>
+               <Col md = {4}> </Col>
+                <Col md = {4} sm = {12} className = "login" > 
                     <input  
                         type= "text"
                         placeholder = "Name"
                         onChange = {(event) => setName(event.target.value)}
                     /> 
-                </Col>
-            </Row>
-            <Row>
-                <Col md = {12}> 
-                    <Button id ="join" type = "submit" onClick = {joinTeam}> JOIN ROOM </Button> 
                     <input  
                         type= "text"
                         placeholder = "Room"
                         onChange = {(event) => setRoom(event.target.value)}
                     />
+                    <Button id ="join" type = "submit" onClick = {joinTeam}> JOIN ROOM </Button> 
+                    <Button  type = "submit" onClick = {createTeam} > CREATE ROOM </Button> 
                 </Col>
-            </Row>
-            <Row>
-                <Col md = {12}> 
-                  <Button  type = "submit" onClick = {createTeam} > CREATE ROOM </Button> 
-                </Col>  
             </Row>
            
         </Container>

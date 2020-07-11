@@ -79,9 +79,11 @@ function Home ({name, room, users, admin, makeAdmin, setName, setRoom, setUsers,
 
         const adminType = person.admin ? "person admin": "person"
         const nameType = (person.name == name) ? "profile": "normal"
+        const image = person.image ? <img src = {person.image} /> : <div className = "placeimage"> { person.name[0] }</div>
+
         return (
         <div className = {adminType} key = {index} > 
-            <img src={person.image} /> 
+            {image}  
             <i className = {nameType}> {person.name} </i>
         </div> )
     })

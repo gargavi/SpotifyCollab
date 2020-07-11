@@ -5,9 +5,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.btn { 
+.btn.btn-primary { 
   font-family: 'Quicksand', sans-serif;
-  background-color: #1ED760 !important;
+  background-color: #1ED760;
   color: white;
   cursor: pointer;
   height: 50px;
@@ -22,18 +22,15 @@ body {
   border-color:white !important;
 }
 
-.btn:hover {
-  border-style:solid;
-  background-color: #1ED760;
+.btn.btn-primary:hover {
+  background-color: #11a046c7;
 }
 
-.btn:active { 
-  background-color: #1ED760 !important;
+.btn.btn-primary:active { 
+  background-color: #11a046c7;
 }
 
-.btn:focus { 
-  background-color: #1ED760 !important;
-  border-style: solid;
-  border-width: 4px;
+.btn.btn-primary:focus { 
+  background-color: #11a046c7 !important;
 
 }
