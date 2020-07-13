@@ -2,12 +2,19 @@ const http = require('http');
 const express = require('express'); 
 const socketio = require("socket.io"); 
 const cors = require('cors'); 
+var bodyParser = require('body-parser'); 
 const SpotifyWebApi =  require('spotify-web-api-node'); 
 const router =  express.Router(); 
 
-router.get("/", (req, res) => { 
-    res.send({response: "Server is up and running"}).status(200); 
-})
+const credentials = { 
+    clientId: "83761c12bfb5467faa0a62979a6fc4e2", 
+    clientSecret: "92bb30f93a15410e980716ce82cd600b", 
+    redirectUri: "http://localhost:3000/home"
+    //redirectUri: "http://spotifyrooms.com/home"
+};
+
+var SpotifyApi  = new SpotifyWebApi(credentials);
+var jsonParser = bodyParser.json();
 
 const PORT = process.env.PORT || 5000;
 
@@ -16,18 +23,24 @@ const server = http.createServer(app);
 const io = socketio(server);
 
 app.use(cors()); 
+app.use(bodyParser.urlencoded({extended: true}))
+
+router.get("/", (req, res) => { 
+    res.send({response: "Server is up and running"}).status(200); 
+})
+
+router.post("/authorize",jsonParser, (req, res) => { 
+    var scopes = ['user-read-private', 'user-read-currently-playing', 
+    'playlist-read-private', 'user-library-read', 'user-top-read', 'user-modify-playback-state' ]
+    console.log(req.body); 
+    res.send({url: SpotifyApi.createAuthorizeURL(scopes, req.body.state, true)});
+})
+
 app.use(router); 
 
 users = [] 
 
-const credentials = { 
-    clientId: "83761c12bfb5467faa0a62979a6fc4e2", 
-    clientSecret: "92bb30f93a15410e980716ce82cd600b", 
-    //redirectUri: "http://localhost:3000/home"
-    redirectUri: "https://spotifyrooms.z22.web.core.windows.net/home"
-};
 
-var SpotifyApi  = new SpotifyWebApi(credentials);
 
 io.on('connect', (socket) => { 
     socket.on('authenticate', ({name_temp, room_temp, admin_temp, code}, callback) => { 
@@ -58,7 +71,8 @@ io.on('connect', (socket) => {
                                     socket_id: socket.id, 
                                     access_token: access_token,
                                     refresh_token: refresh_token, 
-                                    image: image ? image["url"] : null
+                                    image: image ? image["url"] : null, 
+                                    start: false
                                 }
                                 users.push(user)
                                 callback(null)
@@ -79,11 +93,11 @@ io.on('connect', (socket) => {
     socket.on('join', () => {
         const relevantUser = users.find(user => user.socket_id == socket.id); 
         const roomUsers = users.filter(user => user.room == relevantUser.room); 
-        console.log(users);
         io.to(relevantUser.room).emit('roomData', {users: roomUsers}); 
     } ), 
     socket.on('start', ({room}) => {
-        console.log(room);
+        const user = users.find(user => user.room == room && user.admin == true); 
+        user.start = true
         io.to(room).emit('start');
     }), 
     socket.on('disconnect', () => {

@@ -4,7 +4,6 @@ import queryString from 'query-string';
 import socket from "../socket"; 
 import {connect} from "react-redux"; 
 import SpotifyWebApi from 'spotify-web-api-node';
-import credentials from "../credentials";
 import {setName, setRoom, setCode, makeAdmin, setUsers}  from "../login/loginSlice";
 import {Row, Col, Container, Button } from "react-bootstrap"; 
 import "./home.css";
@@ -14,7 +13,6 @@ import "./home.css";
 
 function Home ({name, room, users, admin, makeAdmin, setName, setRoom, setUsers, setCode}) {
     const {code, state} = queryString.parse(useLocation().search); 
-    var SpotifyAPI = new SpotifyWebApi(credentials); 
     // SpotifyAPI.authorizationCodeGrant(code).then(
     //     function(data) { 
     //         SpotifyAPI.setAccessToken(data.body["access_toke"])
@@ -40,6 +38,8 @@ function Home ({name, room, users, admin, makeAdmin, setName, setRoom, setUsers,
                 socket.emit('join')
             }
         })
+        
+
     }, [])
 
     // async function getPerson(users) {
@@ -69,11 +69,16 @@ function Home ({name, room, users, admin, makeAdmin, setName, setRoom, setUsers,
     useEffect (() => { 
         socket.on('roomData', ({users}) => {
             setUsers(users); 
+            const user = users.find(user => user.admin == true)
+            if (user.start) { 
+                history.push("/main");
+            }
         } ) 
         socket.on('start', () => { 
             history.push("/main"); 
         }) 
     }, [])
+
 
     const roomUsers = users.map( (person, index) => {
 

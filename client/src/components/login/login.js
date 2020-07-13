@@ -1,28 +1,27 @@
 import React, {useState, useEffect} from 'react'; 
 import {connect} from "react-redux";
 import {Link, useHistory} from "react-router-dom"; 
-
+import axios from "axios";
 import {Button, Col, Row, Container} from "react-bootstrap";
 import SpotifyWebApi from 'spotify-web-api-node'; 
 import SpotifyLogo from "../photos/Spotify_Logo_RGB_Green.png"
-import credentials from "../credentials";
 import {setName, setRoom} from "./loginSlice"; 
 import "./login.css"
+import {endpoint} from "../socket";
 
 function Login({name, room, setName, setRoom}) { 
     const [errors, setErrors] = useState(""); 
     const history = useHistory();
 
     function Authorize(name, room, admin) { 
-        
-        var spotifyApi = new SpotifyWebApi(credentials);
-        var scopes = ['user-read-private', 'user-read-currently-playing', 
-        'playlist-read-private', 'user-library-read', 'user-top-read', 'user-modify-playback-state' ]
+    
+
         const adminbit =  admin ? 1 : 0   
         const state = adminbit +  room + name
-        var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state, true); 
-
-        window.open(authorizeURL, "_self")
+        axios.post(endpoint + "/authorize", {
+            state: state
+        }).then(
+            res => window.open(res.data.url, "_self"))        
     }
     
     function joinTeam() { 

@@ -6,7 +6,7 @@ export const loginSlice = createSlice({
     name: "",
     room: "",
     code: "", 
-    admin: false, 
+    admin: null, 
     users: [], 
     access_token: ""
   },

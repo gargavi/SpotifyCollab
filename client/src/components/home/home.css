@@ -95,12 +95,6 @@
     
 }
 
-.home .startbutton:hover { 
-    border-style: solid;
-    border-color: white;
-    border-width: 4px;
-    background-color: #1ED760;
-}
 
 .home .profile { 
     color: #1e96d7;
