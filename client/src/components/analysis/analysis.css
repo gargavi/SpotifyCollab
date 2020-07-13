@@ -1,0 +1,60 @@
+.analysis { 
+    height: 80vh;
+    background-color: rgb(49, 49, 49);
+    border-radius: 20px;
+}
+
+.totaldisplay img { 
+    width: 100%;
+}
+
+.totaldisplay {
+    height: 68vh; 
+    width: 100%;
+    overflow: auto;
+}
+
+
+.totaldisplay::-webkit-scrollbar { 
+    width: 10px;
+    background-color: rgba(24, 23, 23, 0.347);
+    border-radius: 10px;
+}
+.totaldisplay::-webkit-scrollbar-thumb { 
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.789);
+}
+.totaldisplay table { 
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.totaldisplay .image { 
+    width: 20%;
+}
+
+
+.totaldisplay .description i{ 
+    display: block;
+}
+
+.analysis select { 
+    border-radius: 10px;
+    height: 40px;
+    width: 110px;
+    text-align: center;
+    font-family: 'Quicksand', sans-serif;
+    display: inline-block;
+}
+
+.analysis h4, .analysis select { 
+    margin-top: 5%;
+    margin-bottom: 4%;
+}
+
+.analysis .matched { 
+    color: #1ed760;
+    font-weight: bold;
+}
+

@@ -1,0 +1,102 @@
+.singlePlaylist { 
+    width: 100%;
+    padding: 2%;
+    color: white;
+    background-color: rgb(49, 49, 49);
+    border-radius: 20px;
+    border-top-left-radius: 0px;
+    font-size: 20px;
+    font-family: "Quicksand", sans-serif;
+}
+
+.singlePlaylist table { 
+    border-collapse: separate;
+    border-spacing: 0 10px;
+    width: 100%;
+}
+
+.songImage img { 
+    width: 50%;
+}
+.songImage { 
+    text-align: center;
+    width: 40%;
+}
+
+.songName { 
+    width: 30%;
+}
+
+.songMatching { 
+    width: 15%;
+    text-align: center;
+}
+
+.userMatching { 
+    width: 15%;
+}
+.userMatching i { 
+    display: block;
+}
+
+.playlistDescription img { 
+    width: 80%;
+}
+
+.playlistDescription { 
+    text-align: center;
+    margin-top: 5%;
+}
+
+.playlistDescription p { 
+    margin-bottom: 0%;
+}
+
+.playlistSongs {
+    height: 78vh;
+    overflow: auto;
+}
+
+.playlistSongs::-webkit-scrollbar { 
+    width: 10px;
+    background-color: rgba(24, 23, 23, 0.347);
+    border-radius: 10px;
+}
+.playlistSongs::-webkit-scrollbar-thumb { 
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.789);
+}
+
+.pie { 
+    width: 40px;
+    height: 40px; 
+    position: relative;
+
+    border-radius: 50%;
+    background-color: #1ED760; 
+    background-image: linear-gradient(to right, transparent 50%, rgb(49, 49, 49) 0)
+}
+
+
+.cover {
+    display: block;
+    height: 40px;
+    position: relative;
+    width: 20px;
+    margin-left: 20px;
+    border-radius: 0 100% 100% 0 / 50%;
+    background-color: rgb(49, 49, 49);
+    transform-origin: left;
+}
+
+
+.goback { 
+    font-family: "Quicksand", sans-serif;
+    color: rgb(3, 180, 230);   
+}
+
+.goback:hover { 
+    color: rgb(3, 180, 230); 
+    font-weight: bolder;
+    text-decoration: none;
+}
