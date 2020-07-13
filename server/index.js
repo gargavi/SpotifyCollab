@@ -5,13 +5,7 @@ const cors = require('cors');
 var bodyParser = require('body-parser'); 
 const SpotifyWebApi =  require('spotify-web-api-node'); 
 const router =  express.Router(); 
-
-const credentials = { 
-    clientId: "83761c12bfb5467faa0a62979a6fc4e2", 
-    clientSecret: "92bb30f93a15410e980716ce82cd600b", 
-    redirectUri: "http://localhost:3000/home"
-    //redirectUri: "http://spotifyrooms.com/home"
-};
+import credentials from "./credentials"
 
 var SpotifyApi  = new SpotifyWebApi(credentials);
 var jsonParser = bodyParser.json();
