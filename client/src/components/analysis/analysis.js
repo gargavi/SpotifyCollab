@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {connect} from "react-redux"; 
 import SpotifyWebApi from "spotify-web-api-node"; 
 import {useParams} from "react-router-dom";
-import {Col, Container, Row} from "react-bootstrap"; 
+import {Col, Container, Row, Table} from "react-bootstrap"; 
 import "./analysis.css"; 
 
 function Analysis({access_token, users, name}) {
@@ -196,22 +196,22 @@ function Analysis({access_token, users, name}) {
                             </Col>
                         </Row>
                         <Row>
-                            <Col md = {6} sm = {12}>
+                            <Col md = {6} sm = {6}>
                                 <div className ="totaldisplay"> 
-                                    <table>
+                                    <Table>
                                     <tbody>
                                         {mytops}
                                     </tbody>
-                                    </table>
+                                    </Table>
                                 </div>
                             </Col>
-                            <Col md = {6} sm = {12}>
+                            <Col md = {6} sm = {6}>
                                 <div className = "totaldisplay"> 
-                                    <table>
+                                    <Table>
                                     <tbody>
                                         {othertops}
                                     </tbody>
-                                    </table>
+                                    </Table>
                                 </div>
                             </Col>
                         </Row>

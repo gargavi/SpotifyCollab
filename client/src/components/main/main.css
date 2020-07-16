@@ -86,10 +86,10 @@
 }
 .main .people { 
     text-align: center;
-    max-height: 70vh;
+    height: 45vh;
     overflow: auto;
     padding: 2%;
-    margin-top: 2%;
+    margin-top: 20%;
     margin-bottom: 2%;
 }
 
@@ -135,4 +135,31 @@
 
 .introduction a { 
     color: rgb(75, 84, 247);
+}
+
+.people .playing p { 
+    color: white;
+    font-family: "Quicksand", sans-serif; 
+    padding: 3%;
+}
+.main .playing .fa-step-backward, .main .playing .fa-step-forward, .main .playing .fa-play { 
+    color: white;
+    margin-left: 2%;
+    margin-right: 2%;
+}
+
+
+.main .playing { 
+    text-align: center;
+    margin-top: 5%;
+    color: white;
+    min-height: 45vh;
+    margin-bottom: 3%;
+}
+.main .playing img { 
+    width: 60%;
+}
+
+.main .playing p { 
+    margin-bottom: 1%;
 }

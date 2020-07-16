@@ -5,7 +5,7 @@ const cors = require('cors');
 var bodyParser = require('body-parser'); 
 const SpotifyWebApi =  require('spotify-web-api-node'); 
 const router =  express.Router(); 
-import credentials from "./credentials"
+const credentials  = require("./credentials.js")
 
 var SpotifyApi  = new SpotifyWebApi(credentials);
 var jsonParser = bodyParser.json();
@@ -24,7 +24,7 @@ router.get("/", (req, res) => {
 })
 
 router.post("/authorize",jsonParser, (req, res) => { 
-    var scopes = ['user-read-private', 'user-read-currently-playing', 
+    var scopes = ['user-read-private', 'user-read-currently-playing', "user-read-playback-state", 
     'playlist-read-private', 'user-library-read', 'user-top-read', 'user-modify-playback-state' ]
     console.log(req.body); 
     res.send({url: SpotifyApi.createAuthorizeURL(scopes, req.body.state, true)});
@@ -83,17 +83,54 @@ io.on('connect', (socket) => {
             callback(errors)
         } 
         console.log("authenticate");
-    }),
+    })
     socket.on('join', () => {
         const relevantUser = users.find(user => user.socket_id == socket.id); 
         const roomUsers = users.filter(user => user.room == relevantUser.room); 
         io.to(relevantUser.room).emit('roomData', {users: roomUsers}); 
-    } ), 
+    } ) 
     socket.on('start', ({room}) => {
         const user = users.find(user => user.room == room && user.admin == true); 
         user.start = true
         io.to(room).emit('start');
-    }), 
+    }) 
+    socket.on('goBack', ({room, img, song}) => { 
+        io.to(room).emit('goBack', {song, img}); 
+    })
+    socket.on('goNext', ({room, img, song}) => { 
+        io.to(room).emit('goNext', {song, img}); 
+    })
+    socket.on('pause', ({room}) => { 
+        console.log('pause')
+        io.to(room).emit('pause'); 
+    })
+    socket.on('setSongName', ({name, room, img}) => { 
+        io.to(room).emit('setSongName', ({name, img}))
+    })
+    socket.on('Next', ({room}) => { 
+        const user = users.find(user => user.room == room && user.admin == true);
+        if (user) { 
+            io.to(user.socket_id).emit('Next')
+        } else { 
+            io.to(room).emit('error', 'No admin'); 
+        }
+        
+    })
+    socket.on("Back", ({room})=> { 
+        const user = users.find(user => user.room == room && user.admin == true);
+        if (user) { 
+            io.to(user.socket_id).emit('Back'); 
+        } else { 
+            io.to(room).emit('error', "No admin"); 
+        }
+        
+    })  
+
+    socket.on("addSong", ({name, artist, img, id}) => { 
+        const user = users.find(user => user.socket_id == socket.id); 
+        io.to(user.room).emit('addSong', ({name, artist, img, id}));
+    })
+
     socket.on('disconnect', () => {
         const index = users.findIndex(user => user.socket_id === socket.id); 
         let current_user; 

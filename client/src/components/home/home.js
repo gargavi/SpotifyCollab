@@ -3,7 +3,6 @@ import {useParams, useLocation, useHistory} from "react-router-dom";
 import queryString from 'query-string'; 
 import socket from "../socket"; 
 import {connect} from "react-redux"; 
-import SpotifyWebApi from 'spotify-web-api-node';
 import {setName, setRoom, setCode, makeAdmin, setUsers}  from "../login/loginSlice";
 import {Row, Col, Container, Button } from "react-bootstrap"; 
 import "./home.css";

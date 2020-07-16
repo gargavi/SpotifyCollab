@@ -2,8 +2,9 @@ import React, {useEffect, useState} from "react";
 import {connect} from "react-redux"; 
 import SpotifyWebApi from "spotify-web-api-node"; 
 import {useParams, Link} from "react-router-dom";
-import {Col, Container, Row} from "react-bootstrap"; 
+import {Col, Container, Row, Table, Button} from "react-bootstrap"; 
 import "./playlist.css"; 
+import socket from "../socket";
 
 function Playlist({access_token, users, name}) {
     let my_spotify;
@@ -55,7 +56,9 @@ function Playlist({access_token, users, name}) {
                     for (var i = 0; i < data.body.length; i++) { 
                         if (data.body[i]) { 
                             pack_songs[i].matched += 1;
-                            pack_songs[i].users.push(users[j].name)
+                            const access = spot.getAccessToken()
+                            const user = users.find(user.access_token == access)
+                            pack_songs[i].users.push(user.name)
                         }
                     } 
                     if (j == (all_spotifies.length - 1)) {
@@ -111,11 +114,14 @@ function Playlist({access_token, users, name}) {
         })
         return(
             <tr className = "song" key= {index} >
+                <td className = "songAdd">
+                    <Button onClick = {() => socket.emit('addSong', {name: song.name, artist: song.artist,img: song.image, id: song.id})}> + </Button> 
+                </td>
                 <td className = "songImage">
                     <img src = {song.image} />
                 </td>
                 <td className = "songName">
-                    <h4>{song.name} </h4>
+                    <h5>{song.name} </h5>
                     <i>{song.artist} </i>
                 </td>
                 <td className = "songMatching">
@@ -153,11 +159,11 @@ function Playlist({access_token, users, name}) {
                     </Col>
                     <Col md = {8} sm = {12} >
                         <div className = "playlistSongs">
-                            <table>
+                            <Table>
                                 <tbody>
                                     {songlist}
                                 </tbody>
-                            </table>
+                            </Table>
                         </div>
                     </Col>
                     

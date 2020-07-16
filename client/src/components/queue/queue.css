@@ -1,0 +1,23 @@
+.queue { 
+    height: 78vh; 
+    overflow: auto;
+    background-color: rgb(49, 49, 49);
+    border-radius: 20px;
+    border-top-right-radius: 0px;
+}
+
+.queueimage { 
+    width: 20%;
+    text-align: center;
+}
+
+.queueimage img { 
+    width: 40%;
+}
+
+.queueDescrip { 
+    width: 30%;
+    color: white;
+    text-align: center;
+}
+

@@ -14,24 +14,37 @@ import {Col, Container, Row, Navbar} from 'react-bootstrap';
 import "./main.css"; 
 import {setAccess} from "../login/loginSlice";
 import Playlists from "../playlists/playlists";
+import Queue from "../queue/queue";
 import socket from "../socket"; 
 import Analysis from "../analysis/analysis";
+import {  faStepForward, faStepBackward, faPause, faPlay } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {setSongName, setSongImage, goNextQueue, addSong} from "../queue/queueSlice";
 
-
-function Main({name, room, users, setAccess}) { 
+function Main({name, room, admin, access_token, users, setAccess, songName, songImage, setSongName, setSongImage, goNextQueue, addSong}) { 
     let my_spotify; 
     var all_spotifies = []
     const history = useHistory(); 
-
     
     useEffect(() => {
         var user;
-        console.log(users);
         for (user of users) {
-            console.log(user);
             if (user.name == name) { 
                 setAccess(user.access_token); 
                 my_spotify = new SpotifyWebApi({accessToken: user.access_token})
+                if (user.admin) {
+                    my_spotify.getMyCurrentPlaybackState({}).then(
+                        function(data) { 
+                            if (data.body) { 
+                                if (data.body["item"]["name"]) { 
+                                    socket.emit("setSongName", {name: data.body["item"]["name"], room: room, img: data.body["item"]["album"]["images"][0]});
+                                };
+                            } else { 
+                                socket.emit("setSongName", {name: "Nothing Playing", img: {url: ""}, room: room})
+                            }
+                        }
+                    )
+                }
             } else { 
                 all_spotifies.push(new SpotifyWebApi({accessToken: user.access_token}))
             }
@@ -42,7 +55,100 @@ function Main({name, room, users, setAccess}) {
         } 
 
     }, [])
-    
+
+    function getSongName() { 
+        return songName
+    }
+
+    useEffect( () => {
+        let updateinterval;
+        var my_spot = new SpotifyWebApi({accessToken: access_token})
+        if (admin) { 
+            updateinterval = setInterval(() => UpdateMe(), 2000);
+            function UpdateMe() { 
+                my_spot.getMyCurrentPlaybackState().then(
+                    function(data) { 
+                        var currentName = getSongName();
+                        if (data.body) { 
+                            const song = data.body["item"] ? data.body["item"]["name"] : "Null"
+                            const img = data.body["item"]["album"]["images"][0] ? data.body["item"]["album"]["images"][0] : {"url": null}
+                            console.log(song); 
+                            console.log(currentName); 
+                            if (song != currentName) { 
+                                socket.emit("goNext", {song: song, room: room, img: img})
+                            }
+                        }
+                    }
+                )
+            }; 
+        } 
+        return () => clearInterval(updateinterval);
+    }, [songName])
+
+    useEffect( () => { 
+        socket.on('goBack', ({song, img}) => { 
+            setSongName({song, img}); 
+        }); 
+        socket.on('pause', () => { 
+            console.log('pause')
+        });
+        socket.on('goNext', ({song, img}) => { 
+            goNextQueue({song, img}); 
+        }); 
+        socket.on('setSongName', ({name, img}) => { 
+            setSongName({song: name, img});
+        })
+        socket.on('setSongImage', ({src})=> { 
+            setSongImage(src); 
+        })
+        socket.on('addSong', ({name, artist, img, id}) => { 
+              addSong({name, artist, img}); 
+              if (admin) {
+                  
+                  my_spotify.addQueue("spotify:track:" + id).then(
+                      function(data) { 
+                      }, function(data) { 
+                          alert("error")
+                      }
+                  )
+              }
+        })
+        socket.on('Next', () => {
+            my_spotify.skipToNext().then(
+                function(data) {   
+                    
+                my_spotify.getMyCurrentPlayingTrack({}).then(
+                    function(data) { 
+                        if (data.body) {
+                            const song = data.body["item"] ? data.body["item"]["name"] : "Null"
+                            const img = data.body["item"]["album"]["images"][0] ? data.body["item"]["album"]["images"][0] : {"url": null}
+                            if (song) { 
+                                socket.emit('goNext', {song, img, room}); 
+                            }
+                        }
+                    }
+                )}
+            )
+            
+        })
+        socket.on('Back', () => { 
+            my_spotify.skipToPrevious().then(
+                function(data) {
+                my_spotify.getMyCurrentPlayingTrack({}).then(
+                    function(data) { 
+                        if (data.body) { 
+                            const song = data.body["item"] ? data.body["item"]["name"] : "Null"
+                            const img = data.body["item"]["album"]["images"][0] ? data.body["item"]["album"]["images"][0] : {"url": null}
+                            if (song) { 
+                                socket.emit('goBack', {song, img, room})
+                            };
+                        } 
+                    }
+                )}
+            )
+            
+        })
+    }, [])
     
     const roomUsers = users.map( (person, index) => {
 
@@ -62,10 +168,20 @@ function Main({name, room, users, setAccess}) {
             <div className = "main">
                 <Container fluid>
                     <Row>
-                        <Col md={2} className = "people">
-                            {roomUsers}
+                        <Col md={3} sm={12} >
+                            <div className = "people">
+                                {roomUsers}                                
+                            </div>
+                            <div className = "playing">
+                                <img src = {songImage} />
+                                <p> {songName} </p>
+
+                                <FontAwesomeIcon onClick = {() => socket.emit("Back", {room})} icon={faStepBackward} size = "2x" />
+                                <FontAwesomeIcon onClick = {() => socket.emit("pause", {room}) }icon={faPlay} size = "2x" /> 
+                                <FontAwesomeIcon onClick = {() => socket.emit("Next", {room})} icon={faStepForward} size = "2x" />
+                            </div> 
                         </Col>
-                        <Col md = {10} className = "navigation">                            
+                        <Col md = {9} sm={12} className = "navigation">                            
                             <Navbar>
                                 <NavLink to = "/playlists"  className = "navlink" activeClassName = "mainactive">
                                     Playlists
@@ -85,7 +201,7 @@ function Main({name, room, users, setAccess}) {
                                     <Analysis/>
                                 </Route>
                                 <Route path = "/queue">
-                                    <h3> Queue Feature Coming Soon </h3> 
+                                    <Queue /> 
                                 </Route>
                                 <Route path = "/">
                                     <div class = "introduction">
@@ -128,9 +244,13 @@ function Main({name, room, users, setAccess}) {
 const mapStateToProps = state => ({
     name: state.login.name, 
     room: state.login.room, 
-    users: state.login.users
+    admin: state.login.admin, 
+    users: state.login.users, 
+    songName: state.queue.songName,
+    songImage: state.queue.songImage, 
+    access_token: state.login.access_token
 })
 
-const mapDispatchToProps = {setAccess}; 
+const mapDispatchToProps = {setAccess, setSongName, goNextQueue, addSong, setSongImage}; 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main); 

@@ -4,6 +4,10 @@
     background-color: rgb(49, 49, 49);
     border-radius: 20px;
     border-top-left-radius: 0px;
+    padding: 1%;
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-evenly
 }
 
 .allplaylists::-webkit-scrollbar { 
@@ -16,11 +20,10 @@
     background-color: rgba(255, 255, 255, 0.789);
 }
 .playlist { 
-    width: 20%;
-    display: inline-block;
     vertical-align: top;
     padding: 1%;
-    text-align: center;
+    margin-top: 8%;
+
 }
 .playlist i { 
     display: block;
@@ -31,4 +34,10 @@
     width: 150px;
     height: 150px;
     object-fit: cover;
+}
+
+.allplaylists a:hover { 
+    text-decoration: none;
+    font-weight: bold;
+    transform: scale(1.05)
 }

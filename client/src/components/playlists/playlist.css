@@ -10,21 +10,54 @@
 }
 
 .singlePlaylist table { 
-    border-collapse: separate;
     border-spacing: 0 10px;
     width: 100%;
 }
 
+.singlePlaylist .table td { 
+    border-top: none;
+}
+
 .songImage img { 
-    width: 50%;
+    width: 100%;
+}
+
+.songAdd { 
+    width: 10%;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.songAdd .btn { 
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    display: block;
+    border-radius: 0px;
+    border-color: white;
+    background-color:rgb(50, 50, 50);
 }
 .songImage { 
     text-align: center;
-    width: 40%;
+    width: 35%;
 }
 
 .songName { 
-    width: 30%;
+    width: 25%;
+    color: white;
+    display: table-cell; 
+    vertical-align: middle;
+}
+
+.songName i, .songName h5 { 
+    display: inline-block; 
+}
+
+.songName h5 { 
+    font-size: 16px;
+}
+.songName i { 
+    font-size: 12px;
 }
 
 .songMatching { 
@@ -34,6 +67,9 @@
 
 .userMatching { 
     width: 15%;
+    color: white;
+    display: table-cell;
+    vertical-align: middle;
 }
 .userMatching i { 
     display: block;
@@ -46,6 +82,7 @@
 .playlistDescription { 
     text-align: center;
     margin-top: 5%;
+    
 }
 
 .playlistDescription p { 
@@ -66,6 +103,18 @@
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.789);
 }
+
+.playlistSongs .largePie { 
+    display: inline-block; 
+
+}
+
+.playlistSongs .songMatching { 
+    display: table-cell;
+    vertical-align: middle;
+}
+
+
 
 .pie { 
     width: 40px;

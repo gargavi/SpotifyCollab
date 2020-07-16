@@ -1,11 +1,7 @@
 .analysis { 
-    height: 80vh;
+    min-height: 80vh;
     background-color: rgb(49, 49, 49);
     border-radius: 20px;
-}
-
-.totaldisplay img { 
-    width: 100%;
 }
 
 .totaldisplay {
@@ -26,17 +22,23 @@
 }
 .totaldisplay table { 
     width: 100%;
-    border-collapse: separate;
     border-spacing: 0 10px;
 }
-
+.totaldisplay .description { 
+    width: 70%;
+}
 .totaldisplay .image { 
-    width: 20%;
+    width: 30%;
 }
 
+
+.analysis img { 
+    width: 100%;
+}
 
 .totaldisplay .description i{ 
     display: block;
+    margin-top: 5%;
 }
 
 .analysis select { 
@@ -57,4 +59,12 @@
     color: #1ed760;
     font-weight: bold;
 }
+.analysis table {
+    border-collapse: collapse;
+}
 
+.analysis table, .analysis td, .analysis th { 
+    border-style: none;
+    border-top: none !important;
+    color: white;
+}
