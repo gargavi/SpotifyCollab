@@ -26,7 +26,6 @@ router.get("/", (req, res) => {
 router.post("/authorize",jsonParser, (req, res) => { 
     var scopes = ['user-read-private', 'user-read-currently-playing', "user-read-playback-state", 
     'playlist-read-private', 'user-library-read', 'user-top-read', 'user-modify-playback-state' ]
-    console.log(req.body); 
     res.send({url: SpotifyApi.createAuthorizeURL(scopes, req.body.state, true)});
 })
 
@@ -96,7 +95,7 @@ io.on('connect', (socket) => {
     }) 
     socket.on('goBack', ({room, img, song}) => { 
         io.to(room).emit('goBack', {song, img}); 
-    })
+    }) 
     socket.on('goNext', ({room, img, song}) => { 
         io.to(room).emit('goNext', {song, img}); 
     })

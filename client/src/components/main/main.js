@@ -24,6 +24,7 @@ import {setSongName, setSongImage, goNextQueue, addSong} from "../queue/queueSli
 function Main({name, room, admin, access_token, users, setAccess, songName, songImage, setSongName, setSongImage, goNextQueue, addSong}) { 
     let my_spotify; 
     var all_spotifies = []
+    const [play, setPlay] = useState(false); 
     const history = useHistory(); 
     
     useEffect(() => {
@@ -38,6 +39,7 @@ function Main({name, room, admin, access_token, users, setAccess, songName, song
                             if (data.body) { 
                                 if (data.body["item"]["name"]) { 
                                     socket.emit("setSongName", {name: data.body["item"]["name"], room: room, img: data.body["item"]["album"]["images"][0]});
+                                    socket.emit("pause", {room}); 
                                 };
                             } else { 
                                 socket.emit("setSongName", {name: "Nothing Playing", img: {url: ""}, room: room})
@@ -72,11 +74,10 @@ function Main({name, room, admin, access_token, users, setAccess, songName, song
                         if (data.body) { 
                             const song = data.body["item"] ? data.body["item"]["name"] : "Null"
                             const img = data.body["item"]["album"]["images"][0] ? data.body["item"]["album"]["images"][0] : {"url": null}
-                            console.log(song); 
-                            console.log(currentName); 
                             if (song != currentName) { 
                                 socket.emit("goNext", {song: song, room: room, img: img})
                             }
+                        } else { 
                         }
                     }
                 )
@@ -85,13 +86,27 @@ function Main({name, room, admin, access_token, users, setAccess, songName, song
         return () => clearInterval(updateinterval);
     }, [songName])
 
+    useEffect( ()=> {
+        socket.on('pause', () => {
+            setPlay(!play);
+            if (admin) {
+                const my_spot = new SpotifyWebApi({accessToken: access_token})
+                if (!play) {
+                    my_spot.pause({}).then(
+                        function(data){
+                            console.log(data);
+                        }
+                    )
+                } else { 
+                    my_spot.play({}); 
+                }
+            }});
+    }, [])
+
     useEffect( () => { 
         socket.on('goBack', ({song, img}) => { 
             setSongName({song, img}); 
         }); 
-        socket.on('pause', () => { 
-            console.log('pause')
-        });
         socket.on('goNext', ({song, img}) => { 
             goNextQueue({song, img}); 
         }); 
@@ -162,7 +177,13 @@ function Main({name, room, admin, access_token, users, setAccess, songName, song
             {image} 
         </div> )
     })
-
+    let playicon; 
+    if (play) { 
+        playicon = <FontAwesomeIcon onClick = {()=> socket.emit("pause", {room}) }icon={faPause} size = "2x"/>
+    } else {
+        playicon = <FontAwesomeIcon onClick = {() => socket.emit("pause", {room}) }icon={faPlay} size = "2x" /> 
+    }
+    
     return ( 
         <Router>
             <div className = "main">
@@ -177,7 +198,7 @@ function Main({name, room, admin, access_token, users, setAccess, songName, song
                                 <p> {songName} </p>
 
                                 <FontAwesomeIcon onClick = {() => socket.emit("Back", {room})} icon={faStepBackward} size = "2x" />
-                                <FontAwesomeIcon onClick = {() => socket.emit("pause", {room}) }icon={faPlay} size = "2x" /> 
+                                {/* {playicon} */}
                                 <FontAwesomeIcon onClick = {() => socket.emit("Next", {room})} icon={faStepForward} size = "2x" />
                             </div> 
                         </Col>

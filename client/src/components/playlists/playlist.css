@@ -37,6 +37,11 @@
     border-color: white;
     background-color:rgb(50, 50, 50);
 }
+
+.songAdd .btn:focus { 
+    background-color: rgb(49, 49, 49) !important;
+}
+
 .songImage { 
     text-align: center;
     width: 35%;

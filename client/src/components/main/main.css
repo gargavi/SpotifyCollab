@@ -137,11 +137,6 @@
     color: rgb(75, 84, 247);
 }
 
-.people .playing p { 
-    color: white;
-    font-family: "Quicksand", sans-serif; 
-    padding: 3%;
-}
 .main .playing .fa-step-backward, .main .playing .fa-step-forward, .main .playing .fa-play { 
     color: white;
     margin-left: 2%;
@@ -162,4 +157,9 @@
 
 .main .playing p { 
     margin-bottom: 1%;
+    color: white;
+    width: 100%;
+    font-family: "Quicksand", sans-serif; 
+    font-size: 15px;
+    
 }
